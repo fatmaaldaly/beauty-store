@@ -1048,6 +1048,9 @@ These details weren't covered in discovery. They were approved with the PRD on 8
 | D-131 | API contracts approved on 8 October 2026; phase 3 complete |
 | D-132 to D-137 | Security and testing plan approved on 8 October 2026: 16 threats with controls; essential security checklist complete before public demo; Vitest, Testing Library, Playwright + axe, Lighthouse CI, k6; fake adapters, signed webhook fixtures, controllable clock; 80 test cases and traceability matrix as definition of done; quality gates and definition of production-ready |
 | D-138 to D-142 | Implementation roadmap approved on 8 October 2026: phases 4 to 13 in milestones M1 to M5 (COD before card payments, dashboard after the purchase journey); developer writes code with guidance, reference implementations for security-critical parts and review before merge; private deployments until phase 13; Git workflow and definition of done; progress tracker in docs/ |
+| D-143 | npm workspaces instead of pnpm; supersedes the pnpm part of D-089. Local packages are referenced as `"*"`; the root `package.json` sets `packageManager` for Turborepo (approved 13 October 2026) |
+| D-144 | Shared ESLint config package deferred to phase 5, when custom rules are added; amends D-099. Each app keeps the create-next-app ESLint config; Prettier is configured at the root in phase 4 (approved 13 October 2026) |
+| D-145 | Next.js Cache Components turned off at setup; revisited in phase 8 with the catalog pages (D-094) (approved 13 October 2026) |
 
 ### Open items for later phases
 

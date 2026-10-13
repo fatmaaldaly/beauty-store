@@ -1,0 +1,3 @@
+# Store and check out every text file with LF line endings on all machines,
+# so Prettier and the Linux CI see the same files as Windows editors.
+* text=auto eol=lf

@@ -1,7 +1,7 @@
 -- Beauty & Cosmetics E-commerce Platform
 -- Custom migration: rules Prisma's schema language can't express.
 -- Apply right after the initial Prisma migration:
---   pnpm prisma migrate dev --create-only --name constraints_and_security
+--   npx prisma migrate dev --create-only --name constraints_and_security
 --   then paste this file into the generated migration.sql.
 -- Source: "Database Design" document (D-107, D-110, D-111, D-118, D-119, D-088).
 

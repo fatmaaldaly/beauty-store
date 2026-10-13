@@ -105,8 +105,8 @@ Local packages are referenced as `"@beauty/shared": "*"` (npm doesn't support `w
 
 ## Current status
 
-Phase 4 (Repository and environments), task 1 (monorepo skeleton): **not started**.
-The repository currently contains only `CLAUDE.md` and `docs/`; the layout above is the plan.
+Phase 4 (Repository and environments), task 1 (monorepo skeleton): **done** (13 Oct 2026).
+Next: task 2. See `docs/progress.md`.
 
 Task 1 was verified in a sandbox before handover: create-next-app 16.4.0 with
 `--ts --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm --skip-install --disable-git`

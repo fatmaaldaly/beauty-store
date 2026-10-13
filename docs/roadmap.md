@@ -96,7 +96,7 @@ A progress table in the repository's `docs/` folder lists each phase's tasks wit
 
 **Tasks**
 
-1. Create the GitHub repository with pnpm workspaces and Turborepo (D-089); add `apps/storefront`, `apps/dashboard`, `apps/api` (latest stable Next.js, TypeScript strict) and `packages/shared`, plus a shared ESLint and Prettier config (D-099).
+1. Create the GitHub repository with npm workspaces and Turborepo (D-089, D-143); add `apps/storefront`, `apps/dashboard`, `apps/api` (latest stable Next.js, TypeScript strict) and `packages/shared`, plus Prettier at the root (D-099; shared ESLint config in phase 5, D-144).
 2. Set up Tailwind with logical classes in both frontends; add next-intl to the dashboard with `lang` and `dir` switching and empty English and Arabic message files (D-091, D-092).
 3. Move in the verified Prisma schema, `prisma.config.ts`, the constraints migration and the database test script; run them against the Supabase CLI local stack.
 4. Add Mailpit for local email, `.env.example` files for each app, and a README that gets a new developer running in under 30 minutes (NFR-28).
@@ -106,7 +106,7 @@ A progress table in the repository's `docs/` folder lists each phase's tasks wit
 
 **Deliverables:** running monorepo, green CI, private deployments, README.
 
-**Acceptance and tests:** `pnpm dev` starts all three apps; the health check answers through both frontends' proxies, locally and deployed; the database test script passes on Supabase's PostgreSQL; T-SY-05.
+**Acceptance and tests:** `npm run dev` starts all three apps; the health check answers through both frontends' proxies, locally and deployed; the database test script passes on Supabase's PostgreSQL; T-SY-05.
 
 **Done when:** a fresh clone reaches a running setup by following the README alone, and `main` deploys automatically.
 
