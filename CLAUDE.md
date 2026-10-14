@@ -8,7 +8,7 @@ All planning is approved. Source of truth is the `docs/` folder.
 
 | File | Contents |
 | --- | --- |
-| `docs/prd.md` | Requirements (ST-, AD-, BE-, NFR-), user flows, decision log D-001 to D-142 |
+| `docs/prd.md` | Requirements (ST-, AD-, BE-, NFR-), user flows, decision log D-001 to D-147 |
 | `docs/architecture.md` | Components, monorepo layout, module layers, environments, free-tier limits |
 | `docs/database-design.md` | 41 tables, constraints, transactions and locking (section 5) |
 | `docs/api-contracts.md` | Every endpoint, permissions, error codes, idempotency, rate limits |
@@ -105,8 +105,9 @@ Local packages are referenced as `"@beauty/shared": "*"` (npm doesn't support `w
 
 ## Current status
 
-Phase 4 (Repository and environments), task 1 (monorepo skeleton): **done** (13 Oct 2026).
-Next: task 2. See `docs/progress.md`.
+Phase 4 (Repository and environments): task 1 (monorepo skeleton) **done** (13 Oct 2026);
+task 2 (logical classes, next-intl in the dashboard) **done** (14 Oct 2026).
+Next: task 3. See `docs/progress.md`.
 
 Task 1 was verified in a sandbox before handover: create-next-app 16.4.0 with
 `--ts --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm --skip-install --disable-git`
@@ -119,5 +120,5 @@ The verified database files (`schema.prisma`, `constraints_and_security.sql`,
 `test-constraints.mjs`, `prisma.config.ts`) are in `docs/database/`;
 they move into `apps/api` in task 3.
 
-Next after task 1: task 2 (Tailwind logical classes, next-intl in the dashboard).
+Dashboard language: cookie `dashboard_locale` until phase 10 (D-147); fonts per D-146.
 Deferred to phase 5: shared ESLint config package (D-144), when custom rules are added.
