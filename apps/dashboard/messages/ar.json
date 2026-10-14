@@ -1,0 +1,14 @@
+{
+  "Metadata": {
+    "title": "لوحة تحكم متجر الجمال"
+  },
+  "Home": {
+    "title": "لوحة التحكم",
+    "description": "صفحة مؤقتة حتى يتم بناء شاشات لوحة التحكم في المرحلة 10."
+  },
+  "LanguageSwitcher": {
+    "label": "اللغة",
+    "english": "English",
+    "arabic": "العربية"
+  }
+}

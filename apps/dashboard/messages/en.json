@@ -1,0 +1,14 @@
+{
+  "Metadata": {
+    "title": "Beauty Store Dashboard"
+  },
+  "Home": {
+    "title": "Dashboard",
+    "description": "Placeholder page until the dashboard screens are built in phase 10."
+  },
+  "LanguageSwitcher": {
+    "label": "Language",
+    "english": "English",
+    "arabic": "العربية"
+  }
+}
