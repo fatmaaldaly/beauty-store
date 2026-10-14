@@ -1051,6 +1051,8 @@ These details weren't covered in discovery. They were approved with the PRD on 8
 | D-143 | npm workspaces instead of pnpm; supersedes the pnpm part of D-089. Local packages are referenced as `"*"`; the root `package.json` sets `packageManager` for Turborepo (approved 13 October 2026) |
 | D-144 | Shared ESLint config package deferred to phase 5, when custom rules are added; amends D-099. Each app keeps the create-next-app ESLint config; Prettier is configured at the root in phase 4 (approved 13 October 2026) |
 | D-145 | Next.js Cache Components turned off at setup; revisited in phase 8 with the catalog pages (D-094) (approved 13 October 2026) |
+| D-146 | Dashboard font: Geist for Latin text with Noto Sans Arabic as the fallback for Arabic glyphs, self-hosted through `next/font` (approved 14 October 2026) |
+| D-147 | Until staff sign-in exists, the dashboard language is kept in an httpOnly `dashboard_locale` cookie, validated on every read and write; replaced by the staff member's saved preference (D-092, AD-15) in phase 10 (approved 14 October 2026) |
 
 ### Open items for later phases
 
