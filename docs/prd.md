@@ -1053,6 +1053,7 @@ These details weren't covered in discovery. They were approved with the PRD on 8
 | D-145 | Next.js Cache Components turned off at setup; revisited in phase 8 with the catalog pages (D-094) (approved 13 October 2026) |
 | D-146 | Dashboard font: Geist for Latin text with Noto Sans Arabic as the fallback for Arabic glyphs, self-hosted through `next/font` (approved 14 October 2026) |
 | D-147 | Until staff sign-in exists, the dashboard language is kept in an httpOnly `dashboard_locale` cookie, validated on every read and write; replaced by the staff member's saved preference (D-092, AD-15) in phase 10 (approved 14 October 2026) |
+| D-148 | Database extensions (`pg_trgm`, `citext`) are created with `CREATE EXTENSION IF NOT EXISTS` at the top of the initial migration, not through Prisma's `postgresqlExtensions` preview feature, which reports Supabase's pre-installed extensions as drift and blocks `migrate dev`; matches database design section "Written as SQL in migrations" (approved 18 October 2026) |
 
 ### Open items for later phases
 

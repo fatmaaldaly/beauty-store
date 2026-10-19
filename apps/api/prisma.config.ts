@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { defineConfig, env } from "prisma/config";
 
 // The Prisma CLI (migrations) uses the DIRECT connection (D-083).

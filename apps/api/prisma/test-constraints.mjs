@@ -3,7 +3,8 @@
 import pg from "pg";
 import { randomUUID } from "node:crypto";
 
-const pool = new pg.Pool({ connectionString: process.env.DB_URL, max: 25 });
+// DB_URL overrides; otherwise the same direct connection migrations use.
+const pool = new pg.Pool({ connectionString: process.env.DB_URL ?? process.env.DIRECT_URL, max: 25 });
 const q = (sql, params) => pool.query(sql, params);
 let passed = 0, failed = 0;
 
@@ -160,7 +161,7 @@ await expectOk("without the row lock, the stock check catches the race", async (
       await client.query(`UPDATE variants SET stock_quantity = stock_quantity - 1 WHERE id = $1`, [varId]);
       await client.query("COMMIT");
       return "bought";
-    } catch (e) { await client.query("ROLLBACK"); return "blocked by database"; }
+    } catch { await client.query("ROLLBACK"); return "blocked by database"; }
     finally { client.release(); }
   };
   const results = await Promise.all(Array.from({ length: 20 }, attempt));

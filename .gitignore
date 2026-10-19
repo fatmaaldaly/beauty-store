@@ -17,6 +17,9 @@ coverage/
 *.tsbuildinfo
 next-env.d.ts
 
+# Prisma Client, rebuilt from the schema by `prisma generate`
+apps/api/src/generated/
+
 # env files: real values never committed; the .example files are
 .env*
 !.env.example
