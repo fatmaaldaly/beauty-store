@@ -8,16 +8,16 @@
 // - Rules Prisma can't express (CHECK constraints, partial indexes, triggers,
 //   Row Level Security, the order-number start value) live in
 //   prisma/sql/constraints_and_security.sql, applied as a custom migration.
+// - The pg_trgm and citext extensions are created with CREATE EXTENSION at the
+//   top of the init migration, not by Prisma (D-148).
 
 generator client {
-  provider        = "prisma-client"
-  output          = "../src/generated/prisma"
-  previewFeatures = ["postgresqlExtensions"]
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider   = "postgresql"
-  extensions = [pg_trgm, citext]
+  provider = "postgresql"
 }
 
 // ─────────────────────────────────────────────────────────────
