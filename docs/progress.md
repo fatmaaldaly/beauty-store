@@ -1,7 +1,7 @@
 # Progress
 
 Current phase: 4, Repository and environments (milestone M1)
-Next task: 4.4
+Next task: 4.5
 
 ## Phase 4
 
@@ -10,7 +10,7 @@ Next task: 4.4
 | 4.1 | Monorepo skeleton: npm workspaces, Turborepo, three Next.js apps, `packages/shared`, Prettier | Done, 13 Oct 2026 | `main` (no branch, by choice) | lint, typecheck, build pass |
 | 4.2 | Tailwind logical classes; next-intl in the dashboard | Done, 14 Oct 2026 | `feat/rtl-and-i18n` | lint, typecheck, build; manual: switch, RTL, keyboard, 360 px, cookie tampering |
 | 4.3 | Prisma schema, constraints migration, database test script on local Supabase | Done, 19 Oct 2026 | `feat/database-setup` | lint, typecheck, build; `db:test` 22/22 incl. T-SY-05; manual: public API key gets "permission denied" (TH-12) |
-| 4.4 | Mailpit, `.env.example` files, README | Not started | | NFR-28 |
+| 4.4 | Mailpit, `.env.example` files, README | Done, 19 Oct 2026 | `feat/env-and-readme` | NFR-28: fresh-clone walkthrough in 10 min; manual: SMTP test email reached Mailpit |
 | 4.5 | `/api/*` rewrites and `GET /api/v1/health` | Not started | | |
 | 4.6 | GitHub Actions CI | Not started | | T-SY-05, T-NF-07 |
 | 4.7 | Supabase demo project and private Vercel projects | Not started | | |
@@ -36,3 +36,9 @@ Next task: 4.4
 - 4.3: `npm run db:test -w @beauty/api` inserts rows; run `npx prisma migrate reset` (local only) before running it again.
 - 4.3: local Supabase needs Docker Desktop running before `npx supabase start`; first start downloads the images.
 - 4.3: local Supabase includes Mailpit (http://127.0.0.1:54324); check in 4.4 whether a separate Mailpit is still needed.
+- 4.4: no separate Mailpit: the one in the Supabase stack is used (D-085 unchanged). `supabase/config.toml` exposes its SMTP port 54325; a test email sent there showed up in the inbox.
+- 4.4: phase 5 decides whether the local SMTP host and port become environment variables (architecture section 7 lists none) or defaults in the local email sender.
+- 4.4: `.env.example` values: only local, non-secret values filled in; every key is blank, even local Supabase keys, so the CI secret scan (4.6) has nothing to flag.
+- 4.4: NFR-28 walkthrough: fresh clone to `npm run dev` in 10 minutes by following the README alone (Docker images were already downloaded; a new machine adds about 10 minutes).
+- 4.4: `npm run format:check` fails on `apps/api/prisma/test-constraints.mjs` (sandbox file, never formatted); fix before CI runs format checks in 4.6.
+- 4.4: add the health check to the README in 4.5.
