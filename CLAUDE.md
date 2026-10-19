@@ -106,8 +106,9 @@ Local packages are referenced as `"@beauty/shared": "*"` (npm doesn't support `w
 ## Current status
 
 Phase 4 (Repository and environments): task 1 (monorepo skeleton) **done** (13 Oct 2026);
-task 2 (logical classes, next-intl in the dashboard) **done** (14 Oct 2026).
-Next: task 3. See `docs/progress.md`.
+task 2 (logical classes, next-intl in the dashboard) **done** (14 Oct 2026);
+task 3 (Prisma migrations and database tests on local Supabase) **done** (19 Oct 2026).
+Next: task 4. See `docs/progress.md`.
 
 Task 1 was verified in a sandbox before handover: create-next-app 16.4.0 with
 `--ts --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm --skip-install --disable-git`
@@ -116,9 +117,13 @@ for storefront and dashboard, `--api` for the API; root `package.json` has
 remove each app's own `.gitignore` and `packageManager`; app names `@beauty/*`; ports 3000/3001/3002;
 `"typecheck": "next typegen && tsc --noEmit"`; `transpilePackages: ["@beauty/shared"]`.
 
-The verified database files (`schema.prisma`, `constraints_and_security.sql`,
-`test-constraints.mjs`, `prisma.config.ts`) are in `docs/database/`;
-they move into `apps/api` in task 3.
+Database (task 3): schema, migrations and `test-constraints.mjs` live in `apps/api/prisma/`.
+Local database is the Supabase CLI stack (Docker Desktop must be running; `npx supabase start`,
+DB on port 54322, Studio 54323, Mailpit 54324). Prisma 7 notes: `.env` is loaded by
+`import "dotenv/config"` in `prisma.config.ts`; run `npx prisma generate` yourself (the client in
+`src/generated/` is gitignored); extensions are created in SQL, not via Prisma (D-148).
+`npm run db:test -w @beauty/api` inserts rows, so reset the local DB before rerunning.
+Prisma refuses `migrate reset` from Claude without the user's explicit consent each time.
 
 Dashboard language: cookie `dashboard_locale` until phase 10 (D-147); fonts per D-146.
 Deferred to phase 5: shared ESLint config package (D-144), when custom rules are added.

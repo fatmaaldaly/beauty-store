@@ -1,7 +1,7 @@
 # Progress
 
 Current phase: 4, Repository and environments (milestone M1)
-Next task: 4.3
+Next task: 4.4
 
 ## Phase 4
 
@@ -9,7 +9,7 @@ Next task: 4.3
 | --- | --- | --- | --- | --- |
 | 4.1 | Monorepo skeleton: npm workspaces, Turborepo, three Next.js apps, `packages/shared`, Prettier | Done, 13 Oct 2026 | `main` (no branch, by choice) | lint, typecheck, build pass |
 | 4.2 | Tailwind logical classes; next-intl in the dashboard | Done, 14 Oct 2026 | `feat/rtl-and-i18n` | lint, typecheck, build; manual: switch, RTL, keyboard, 360 px, cookie tampering |
-| 4.3 | Prisma schema, constraints migration, database test script on local Supabase | Not started | | T-SY-05 |
+| 4.3 | Prisma schema, constraints migration, database test script on local Supabase | Done, 19 Oct 2026 | `feat/database-setup` | lint, typecheck, build; `db:test` 22/22 incl. T-SY-05; manual: public API key gets "permission denied" (TH-12) |
 | 4.4 | Mailpit, `.env.example` files, README | Not started | | NFR-28 |
 | 4.5 | `/api/*` rewrites and `GET /api/v1/health` | Not started | | |
 | 4.6 | GitHub Actions CI | Not started | | T-SY-05, T-NF-07 |
@@ -29,3 +29,10 @@ Next task: 4.3
 - 4.2: phase 6: move the locale list (`en`, `ar`) to `packages/shared`, shared with `staff_users.locale` in the API.
 - 4.2: all dashboard messages are sent to the browser through `NextIntlClientProvider`; limit per screen in phase 10 if the files grow.
 - 4.2: `.vscode/settings.json` sets LF line endings and format-on-save with Prettier.
+- 4.3: the verified database files moved from `docs/database/` to `apps/api/` (`prisma.config.ts`, `prisma/schema.prisma`, `prisma/sql/`, `prisma/test-constraints.mjs`).
+- 4.3: D-148: `pg_trgm` and `citext` are created in the init migration; Prisma's `postgresqlExtensions` preview reported Supabase's pre-installed extensions as drift.
+- 4.3: Prisma 7 doesn't load `.env`; `prisma.config.ts` starts with `import "dotenv/config"` (dev dependency). CI and Vercel set real environment variables instead.
+- 4.3: Prisma 7 `migrate dev` no longer generates the client; run `npx prisma generate`. The client (`apps/api/src/generated/`) is gitignored, so CI (4.6) must generate it before typecheck.
+- 4.3: `npm run db:test -w @beauty/api` inserts rows; run `npx prisma migrate reset` (local only) before running it again.
+- 4.3: local Supabase needs Docker Desktop running before `npx supabase start`; first start downloads the images.
+- 4.3: local Supabase includes Mailpit (http://127.0.0.1:54324); check in 4.4 whether a separate Mailpit is still needed.
