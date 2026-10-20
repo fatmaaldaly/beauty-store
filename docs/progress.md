@@ -1,7 +1,7 @@
 # Progress
 
 Current phase: 4, Repository and environments (milestone M1)
-Next task: 4.6
+Next task: 4.7
 
 ## Phase 4
 
@@ -12,7 +12,7 @@ Next task: 4.6
 | 4.3 | Prisma schema, constraints migration, database test script on local Supabase | Done, 19 Oct 2026 | `feat/database-setup` | lint, typecheck, build; `db:test` 22/22 incl. T-SY-05; manual: public API key gets "permission denied" (TH-12) |
 | 4.4 | Mailpit, `.env.example` files, README | Done, 19 Oct 2026 | `feat/env-and-readme` | NFR-28: fresh-clone walkthrough in 10 min; manual: SMTP test email reached Mailpit |
 | 4.5 | `/api/*` rewrites and `GET /api/v1/health` | Done, 20 Oct 2026 | `feat/api-proxy-and-health` | lint, typecheck, build; manual: health 200 on :3002 and through both proxies (:3000, :3001); database stopped gives 503 `SERVICE_UNAVAILABLE` through the proxies; recovers without restart; missing `API_INTERNAL_URL` stops the frontend from starting |
-| 4.6 | GitHub Actions CI | Not started | | T-SY-05, T-NF-07 |
+| 4.6 | GitHub Actions CI | Done, 20 Oct 2026 | `feat/ci` | CI green on PR #5: format, lint, typecheck, migrations on empty `postgres:17`, `db:test` incl. T-SY-05, build, dependency scan and Gitleaks (T-NF-07) |
 | 4.7 | Supabase demo project and private Vercel projects | Not started | | |
 
 ## Known gaps
@@ -47,3 +47,10 @@ Next task: 4.6
 - 4.5: when the API app itself is down, the frontends' proxy answers with a plain-text `500 Internal Server Error`, not the D-123 JSON. The frontends' API client (phases 7 and 10) must treat any non-JSON error response as a generic failure.
 - 4.5: the frontends must never get their own `app/api` folder; the rewrite (afterFiles) would be shadowed by it.
 - 4.5: Windows can reserve the Supabase ports (WinNAT, 54318-54417 on 20 Oct); fix in the README troubleshooting table.
+- 4.6: Turborepo 2 strict env mode: a task only sees variables listed in `turbo.json`. Locally `.env` files hide this, because Next reads them from disk. Any new variable a build or `next.config.ts` needs must be added there (`env` if it changes the output, `passThroughEnv` if not).
+- 4.6: `next typegen` loads `next.config.ts`, so typecheck needs `API_INTERNAL_URL` too.
+- 4.6: the API build needs `DATABASE_URL` to be set (Next imports `db.ts` while collecting routes; no connection is made). Vercel (4.7) needs it at build time.
+- 4.6: the "Dependency scan (all, report only)" step shows red with an annotation while the `braces` issue exists; that's expected (D-150) and doesn't fail the job.
+- 4.6: phase 5 adds Vitest and the seed-twice check (BE-16) to CI.
+- 4.6: GitHub notice: `ubuntu-latest` moves to Ubuntu 26 from 19 Oct 2026; watch the first runs after the switch.
+- 4.6: GitHub settings (not in code): ruleset "CI" on the default branch, active, no bypass: no deletion, no force push, pull request required (0 approvals, so a solo developer can merge), required status check `ci` (the job name in `ci.yml`; rename both together). Secret Protection push protection is on (NFR-16). From now on every change to `main` goes through a PR.
