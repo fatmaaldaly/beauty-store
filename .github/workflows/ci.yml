@@ -1,0 +1,87 @@
+# Every push to main and every pull request (D-098). A red run blocks merging.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least privilege: the workflow can read the code and nothing else.
+permissions:
+  contents: read
+
+# A new push to the same branch cancels the run it replaces.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    # Empty PostgreSQL per run, same major version as local Supabase (supabase/config.toml).
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        # Steps start only once the database accepts connections.
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    # CI has no .env files; these replace them. Throwaway local values, not secrets.
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      # The frontends' next.config.ts throws without it (task 4.5). Nothing listens there in CI.
+      API_INTERNAL_URL: http://localhost:3002
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Full history, so Gitleaks scans every commit, not only the last one.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      # Installs exactly the lockfile; fails if it disagrees with package.json.
+      - run: npm ci
+
+      # The client in src/generated/ is gitignored, and typecheck needs it.
+      - run: npx prisma generate
+        working-directory: apps/api
+
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+
+      # Migrations from an empty database, then the constraint tests,
+      # including the Row Level Security check (T-SY-05).
+      - run: npx prisma migrate deploy
+        working-directory: apps/api
+      - run: npm run db:test -w @beauty/api
+
+      - run: npm run build
+
+      # NFR-15, T-NF-07 (D-150): high or critical issues in shipped packages block the merge.
+      - name: Dependency scan (production, blocking)
+        run: npm audit --omit=dev --audit-level=high
+      # Dev tooling issues are reported here but don't block.
+      - name: Dependency scan (all, report only)
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      # NFR-16, T-NF-07: fails if a secret is found anywhere in the history.
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

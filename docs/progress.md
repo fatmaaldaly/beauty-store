@@ -17,7 +17,7 @@ Next task: 4.6
 
 ## Known gaps
 
-- `npm audit`: 5 high, all one issue in `braces`, via `eslint-config-next` 16.4.0 → `@next/eslint-plugin-next` → `fast-glob` → `micromatch`. Lint tooling only, not shipped to users. `npm audit fix --force` would downgrade `eslint-config-next` to 14, so it is not used. Audit policy is decided in task 4.6 (T-NF-07, NFR-15).
+- `npm audit`: 5 high, all one issue in `braces`, via `eslint-config-next` 16.4.0 → `@next/eslint-plugin-next` → `fast-glob` → `micromatch`. Lint tooling only, not shipped to users. `npm audit fix --force` would downgrade `eslint-config-next` to 14, so it is not used. Since 4.6 (D-150), CI blocks only on production dependencies (0 issues); the full audit still reports this one on every run.
 
 ## Notes
 
