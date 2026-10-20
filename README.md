@@ -92,6 +92,21 @@ This starts all three apps. To start one app only: `npm run dev -w @beauty/api`
 | Mailpit (every email the app sends locally) | http://127.0.0.1:54324                                  |
 | PostgreSQL                                  | `127.0.0.1:54322`, user `postgres`, password `postgres` |
 
+### Check it's running
+
+The health check confirms the API can reach the database. Call it on the API directly and through
+both frontends, which forward every `/api/*` request to the API (`API_INTERNAL_URL` in their `.env`):
+
+```bash
+curl http://localhost:3002/api/v1/health
+curl http://localhost:3000/api/v1/health
+curl http://localhost:3001/api/v1/health
+```
+
+Each should print `{"status":"ok","database":"ok"}`. A `503` with `SERVICE_UNAVAILABLE` means the
+database isn't reachable (is Supabase running?); a plain-text `Internal Server Error` from port 3000
+or 3001 means the API app isn't running.
+
 When you're done, stop Supabase with `npx supabase stop`. Your data is kept for the next start.
 
 ## Everyday commands
@@ -120,15 +135,17 @@ This deletes all data and reapplies the migrations. Only ever run it against the
 
 ## Troubleshooting
 
-| Problem                                                                             | Cause and fix                                                                                                        |
-| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified` | Docker Desktop isn't running. Start it, wait until it's ready, then run `npx supabase start` again.                  |
-| `DockerLifecycleInspectError` right after starting Docker                           | Docker wasn't fully started yet. Wait a minute and run the command again.                                            |
-| `Cannot resolve environment variable: DIRECT_URL`                                   | `apps/api/.env` is missing or you're not in `apps/api`. Repeat setup step 2 and run Prisma commands from `apps/api`. |
-| `Can't reach database server at 127.0.0.1:54322`                                    | Supabase isn't running. Run `npx supabase start`.                                                                    |
-| Imports from `src/generated/prisma` not found                                       | Run `npx prisma generate` in `apps/api`.                                                                             |
-| `db:test` fails with `duplicate key value`                                          | Test data from a previous run. Reset as shown in [Database test data](#database-test-data).                          |
-| Image pulls fail with `429 Too Many Requests` or `TLS handshake timeout`            | Network or registry hiccup during the first start. Run `npx supabase start` again; it continues where it stopped.    |
+| Problem                                                                                                 | Cause and fix                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified`                     | Docker Desktop isn't running. Start it, wait until it's ready, then run `npx supabase start` again.                                                                                                                                                    |
+| `DockerLifecycleInspectError` right after starting Docker                                               | Docker wasn't fully started yet. Wait a minute and run the command again.                                                                                                                                                                              |
+| `Cannot resolve environment variable: DIRECT_URL`                                                       | `apps/api/.env` is missing or you're not in `apps/api`. Repeat setup step 2 and run Prisma commands from `apps/api`.                                                                                                                                   |
+| `Can't reach database server at 127.0.0.1:54322`                                                        | Supabase isn't running. Run `npx supabase start`.                                                                                                                                                                                                      |
+| `Error: API_INTERNAL_URL is not set` when starting the storefront or dashboard                          | That app's `.env` is missing. Repeat setup step 2.                                                                                                                                                                                                     |
+| `Ports are not available ... bind: An attempt was made to access a socket in a way forbidden` (Windows) | Windows has reserved the Supabase ports. Check with `netsh interface ipv4 show excludedportrange protocol=tcp`; if 54321-54325 is inside a range, run `net stop winnat` then `net start winnat` in an Administrator terminal and start Supabase again. |
+| Imports from `src/generated/prisma` not found                                                           | Run `npx prisma generate` in `apps/api`.                                                                                                                                                                                                               |
+| `db:test` fails with `duplicate key value`                                                              | Test data from a previous run. Reset as shown in [Database test data](#database-test-data).                                                                                                                                                            |
+| Image pulls fail with `429 Too Many Requests` or `TLS handshake timeout`                                | Network or registry hiccup during the first start. Run `npx supabase start` again; it continues where it stopped.                                                                                                                                      |
 
 ## Working on the project
 
