@@ -53,3 +53,4 @@ Next task: 4.7
 - 4.6: the "Dependency scan (all, report only)" step shows red with an annotation while the `braces` issue exists; that's expected (D-150) and doesn't fail the job.
 - 4.6: phase 5 adds Vitest and the seed-twice check (BE-16) to CI.
 - 4.6: GitHub notice: `ubuntu-latest` moves to Ubuntu 26 from 19 Oct 2026; watch the first runs after the switch.
+- 4.6: GitHub settings (not in code): ruleset "CI" on the default branch, active, no bypass: no deletion, no force push, pull request required (0 approvals, so a solo developer can merge), required status check `ci` (the job name in `ci.yml`; rename both together). Secret Protection push protection is on (NFR-16). From now on every change to `main` goes through a PR.
