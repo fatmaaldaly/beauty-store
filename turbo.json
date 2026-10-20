@@ -3,10 +3,13 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": ["API_INTERNAL_URL", "DATABASE_URL"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "lint": {},
-    "typecheck": {},
+    "typecheck": {
+      "passThroughEnv": ["API_INTERNAL_URL"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

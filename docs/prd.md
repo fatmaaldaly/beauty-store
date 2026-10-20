@@ -1055,6 +1055,7 @@ These details weren't covered in discovery. They were approved with the PRD on 8
 | D-147 | Until staff sign-in exists, the dashboard language is kept in an httpOnly `dashboard_locale` cookie, validated on every read and write; replaced by the staff member's saved preference (D-092, AD-15) in phase 10 (approved 14 October 2026) |
 | D-148 | Database extensions (`pg_trgm`, `citext`) are created with `CREATE EXTENSION IF NOT EXISTS` at the top of the initial migration, not through Prisma's `postgresqlExtensions` preview feature, which reports Supabase's pre-installed extensions as drift and blocks `migrate dev`; matches database design section "Written as SQL in migrations" (approved 18 October 2026) |
 | D-149 | Health check failure: when the database is unreachable or doesn't answer within 2 seconds, `GET /api/v1/health` returns 503 with the standard error format (D-123) and the new code `SERVICE_UNAVAILABLE`, with no error details; the route is always rendered per request (approved 19 October 2026) |
+| D-150 | Dependency scan in CI (NFR-15, T-NF-07): `npm audit --omit=dev --audit-level=high` blocks merging on high or critical advisories in production dependencies; the full audit, dev tooling included, runs in the same job and only reports, so tooling issues stay visible without blocking (approved 20 October 2026) |
 
 ### Open items for later phases
 
