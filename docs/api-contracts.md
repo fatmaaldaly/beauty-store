@@ -89,6 +89,7 @@ Every error, from every endpoint, has the same shape. Frontends decide what to s
 | 429 | `RATE_LIMITED` | Too many attempts; includes a `Retry-After` header |
 | 429 | `ACCOUNT_LOCKED` | Staff account temporarily locked after failed sign-ins (AD-01) |
 | 502 | `PAYMENT_PROVIDER_ERROR` | Paymob returned an error or timed out; the order is kept and can be retried |
+| 503 | `SERVICE_UNAVAILABLE` | A dependency the API needs (the database) isn't reachable; used by the health check (D-149) |
 | 500 | `INTERNAL_ERROR` | Anything unexpected |
 
 Sign-in failures always return the same `UNAUTHENTICATED` message whether the email exists or not (ST-07).
@@ -410,7 +411,7 @@ These endpoints are called by machines, not browsers, so they skip the Origin ch
 | --- | --- | --- | --- | --- |
 | POST | `/api/v1/webhooks/paymob` | Paymob | HMAC signature verified against the raw body (R-001) | Payment and refund events (section 9.2) |
 | GET | `/api/v1/jobs/daily` | Vercel Cron | `Authorization: Bearer <CRON_SECRET>` | Expire unpaid orders, retry failed emails, delete expired tokens and sessions, send low-stock summary (D-084) |
-| GET | `/api/v1/health` | Uptime checks | None | `{ "status": "ok", "database": "ok" }`; no other details |
+| GET | `/api/v1/health` | Uptime checks | None | `{ "status": "ok", "database": "ok" }`; no other details. Database unreachable or slower than 2 seconds: 503 `SERVICE_UNAVAILABLE` in the standard error format (D-149) |
 
 Rules for the webhook endpoint:
 

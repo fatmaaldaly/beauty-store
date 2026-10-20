@@ -1,7 +1,7 @@
 # Progress
 
 Current phase: 4, Repository and environments (milestone M1)
-Next task: 4.5
+Next task: 4.6
 
 ## Phase 4
 
@@ -11,7 +11,7 @@ Next task: 4.5
 | 4.2 | Tailwind logical classes; next-intl in the dashboard | Done, 14 Oct 2026 | `feat/rtl-and-i18n` | lint, typecheck, build; manual: switch, RTL, keyboard, 360 px, cookie tampering |
 | 4.3 | Prisma schema, constraints migration, database test script on local Supabase | Done, 19 Oct 2026 | `feat/database-setup` | lint, typecheck, build; `db:test` 22/22 incl. T-SY-05; manual: public API key gets "permission denied" (TH-12) |
 | 4.4 | Mailpit, `.env.example` files, README | Done, 19 Oct 2026 | `feat/env-and-readme` | NFR-28: fresh-clone walkthrough in 10 min; manual: SMTP test email reached Mailpit |
-| 4.5 | `/api/*` rewrites and `GET /api/v1/health` | Not started | | |
+| 4.5 | `/api/*` rewrites and `GET /api/v1/health` | Done, 20 Oct 2026 | `feat/api-proxy-and-health` | lint, typecheck, build; manual: health 200 on :3002 and through both proxies (:3000, :3001); database stopped gives 503 `SERVICE_UNAVAILABLE` through the proxies; recovers without restart; missing `API_INTERNAL_URL` stops the frontend from starting |
 | 4.6 | GitHub Actions CI | Not started | | T-SY-05, T-NF-07 |
 | 4.7 | Supabase demo project and private Vercel projects | Not started | | |
 
@@ -41,4 +41,9 @@ Next task: 4.5
 - 4.4: `.env.example` values: only local, non-secret values filled in; every key is blank, even local Supabase keys, so the CI secret scan (4.6) has nothing to flag.
 - 4.4: NFR-28 walkthrough: fresh clone to `npm run dev` in 10 minutes by following the README alone (Docker images were already downloaded; a new machine adds about 10 minutes).
 - 4.4: `npm run format:check` fails on `apps/api/prisma/test-constraints.mjs` (sandbox file, never formatted); fix before CI runs format checks in 4.6.
-- 4.4: add the health check to the README in 4.5.
+- 4.4: add the health check to the README in 4.5 (done: "Check it's running").
+- 4.5: D-149: the health check returns 503 `SERVICE_UNAVAILABLE` when the database is unreachable or slower than 2 seconds. A refused connection fails at once, so the timeout only applies to a slow database.
+- 4.5: `API_INTERNAL_URL` is read when `next.config.ts` loads, so on Vercel (4.7) it must be set before the build, and changing it needs a redeploy. The config throws if it's missing; there is no localhost fallback.
+- 4.5: when the API app itself is down, the frontends' proxy answers with a plain-text `500 Internal Server Error`, not the D-123 JSON. The frontends' API client (phases 7 and 10) must treat any non-JSON error response as a generic failure.
+- 4.5: the frontends must never get their own `app/api` folder; the rewrite (afterFiles) would be shadowed by it.
+- 4.5: Windows can reserve the Supabase ports (WinNAT, 54318-54417 on 20 Oct); fix in the README troubleshooting table.

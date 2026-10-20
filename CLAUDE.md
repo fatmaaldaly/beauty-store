@@ -108,8 +108,9 @@ Local packages are referenced as `"@beauty/shared": "*"` (npm doesn't support `w
 Phase 4 (Repository and environments): task 1 (monorepo skeleton) **done** (13 Oct 2026);
 task 2 (logical classes, next-intl in the dashboard) **done** (14 Oct 2026);
 task 3 (Prisma migrations and database tests on local Supabase) **done** (19 Oct 2026);
-task 4 (Mailpit SMTP, `.env.example` files, README) **done** (19 Oct 2026).
-Next: task 5. See `docs/progress.md`; setup steps are in `README.md`.
+task 4 (Mailpit SMTP, `.env.example` files, README) **done** (19 Oct 2026);
+task 5 (`/api/*` rewrites, `GET /api/v1/health`, D-149) **done** (20 Oct 2026).
+Next: task 6 (GitHub Actions CI). See `docs/progress.md`; setup steps are in `README.md`.
 
 Task 1 was verified in a sandbox before handover: create-next-app 16.4.0 with
 `--ts --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm --skip-install --disable-git`
