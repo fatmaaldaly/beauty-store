@@ -7,7 +7,9 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "lint": {},
-    "typecheck": {},
+    "typecheck": {
+      "passThroughEnv": ["API_INTERNAL_URL"]
+    },
     "dev": {
       "cache": false,
       "persistent": true
