@@ -13,7 +13,7 @@ Next task: 4.7
 | 4.4 | Mailpit, `.env.example` files, README | Done, 19 Oct 2026 | `feat/env-and-readme` | NFR-28: fresh-clone walkthrough in 10 min; manual: SMTP test email reached Mailpit |
 | 4.5 | `/api/*` rewrites and `GET /api/v1/health` | Done, 20 Oct 2026 | `feat/api-proxy-and-health` | lint, typecheck, build; manual: health 200 on :3002 and through both proxies (:3000, :3001); database stopped gives 503 `SERVICE_UNAVAILABLE` through the proxies; recovers without restart; missing `API_INTERNAL_URL` stops the frontend from starting |
 | 4.6 | GitHub Actions CI | Done, 20 Oct 2026 | `feat/ci` | CI green on PR #5: format, lint, typecheck, migrations on empty `postgres:17`, `db:test` incl. T-SY-05, build, dependency scan and Gitleaks (T-NF-07) |
-| 4.7 | Supabase demo project and private Vercel projects | Not started | | |
+| 4.7 | Supabase demo project and private Vercel projects | In progress | `feat/deploy-demo` | |
 
 ## Known gaps
 

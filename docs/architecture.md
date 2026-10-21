@@ -206,7 +206,7 @@ There are two environments: your machine and one deployed demo (D-061). Code onl
 |  | Local development | Deployed demo |
 | --- | --- | --- |
 | Apps | All three via one command from the monorepo root | Three Vercel Hobby projects from the same repository (D-082) |
-| Database | Supabase CLI local stack in Docker | Supabase Free project, European region (D-083) |
+| Database | Supabase CLI local stack in Docker | Supabase Free project, Paris `eu-west-3` (D-083, D-153) |
 | Images | Supabase CLI local storage | Supabase Storage bucket (D-086) |
 | Payments | Paymob test keys; a tunnel tool forwards test webhooks to your machine | Paymob test keys (D-005) |
 | Email | Mailpit catches every email locally | Resend; delivers only to your own address until a domain is verified (D-085) |
@@ -228,7 +228,7 @@ The API checks all its variables at startup with a Zod schema and refuses to sta
 ### Deployment pipeline
 
 1. Every push and pull request runs CI (GitHub Actions): install, lint, type-check, unit and integration tests against a temporary PostgreSQL, and a production build of all three apps.
-2. Merging to `main` runs database migrations against the demo database (`prisma migrate deploy` using `DIRECT_URL`), then Vercel deploys the three apps.
+2. Merging to `main` runs database migrations against the demo database (`prisma migrate deploy` using `DIRECT_URL`), then Vercel deploys the three apps. Built in phase 5; until then migrations are applied by hand (D-152).
 3. Migrations must be backward-compatible with the previous app version (add first, remove later), because the old code runs briefly against the new schema.
 4. Rollback: redeploy the previous Vercel deployment; schema changes are rolled forward with a new migration, never by editing an applied one.
 5. Branch preview deployments are turned off for the API so nothing but `main` can write to the single demo database.
