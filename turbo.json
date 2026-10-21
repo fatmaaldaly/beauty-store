@@ -4,6 +4,7 @@
     "build": {
       "dependsOn": ["^build"],
       "env": ["API_INTERNAL_URL", "DATABASE_URL"],
+      "passThroughEnv": ["DIRECT_URL"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "lint": {},
