@@ -206,7 +206,7 @@ There are two environments: your machine and one deployed demo (D-061). Code onl
 |  | Local development | Deployed demo |
 | --- | --- | --- |
 | Apps | All three via one command from the monorepo root | Three Vercel Hobby projects from the same repository (D-082) |
-| Database | Supabase CLI local stack in Docker | Supabase Free project, Paris `eu-west-3` (D-083, D-153) |
+| Database | Supabase CLI local stack in Docker | Supabase Free project, Stockholm `eu-north-1` (D-083, D-153) |
 | Images | Supabase CLI local storage | Supabase Storage bucket (D-086) |
 | Payments | Paymob test keys; a tunnel tool forwards test webhooks to your machine | Paymob test keys (D-005) |
 | Email | Mailpit catches every email locally | Resend; delivers only to your own address until a domain is verified (D-085) |
