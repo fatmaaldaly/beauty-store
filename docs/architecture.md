@@ -252,7 +252,7 @@ The free plans comfortably cover a portfolio demo. The table lists every limit t
 | Commercial use | Vercel Hobby is personal and non-commercial only | Can't host a client store | Client projects move to a paid plan (section 10) |
 | Cold starts | Serverless functions start slowly after idle time | First request after a pause is slower | Accepted for the demo (D-058); performance targets measured on paid-equivalent settings |
 | Connection limits | Serverless functions open many short connections | Database connection errors under load | Pooled connection string for the app (D-083) |
-| Function region | Functions far from the database add latency to every query | Slow API | Deploy API functions in the same European region as the database |
+| Function region | Functions far from the database add latency to every query | Slow API | Deploy all three apps' functions in the same European region as the database (D-153, D-154) |
 
 ## 9. Tooling choices (approved)
 
