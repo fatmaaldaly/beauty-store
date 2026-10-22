@@ -1,7 +1,7 @@
 # Progress
 
-Current phase: 4, Repository and environments (milestone M1)
-Next task: 4.7 (in progress, see "4.7 status")
+Current phase: 5, Backend foundation (milestone M1)
+Next task: 5.1 (route-handler wrapper)
 
 ## Phase 4
 
@@ -13,27 +13,24 @@ Next task: 4.7 (in progress, see "4.7 status")
 | 4.4 | Mailpit, `.env.example` files, README | Done, 19 Oct 2026 | `feat/env-and-readme` | NFR-28: fresh-clone walkthrough in 10 min; manual: SMTP test email reached Mailpit |
 | 4.5 | `/api/*` rewrites and `GET /api/v1/health` | Done, 20 Oct 2026 | `feat/api-proxy-and-health` | lint, typecheck, build; manual: health 200 on :3002 and through both proxies (:3000, :3001); database stopped gives 503 `SERVICE_UNAVAILABLE` through the proxies; recovers without restart; missing `API_INTERNAL_URL` stops the frontend from starting |
 | 4.6 | GitHub Actions CI | Done, 20 Oct 2026 | `feat/ci` | CI green on PR #5: format, lint, typecheck, migrations on empty `postgres:17`, `db:test` incl. T-SY-05, build, dependency scan and Gitleaks (T-NF-07) |
-| 4.7 | Supabase demo project and private Vercel projects | In progress: Supabase and code done; Vercel not started | `feat/deploy-demo` | so far: `db:test` 22/22 on the demo database incl. T-SY-05; lint, typecheck, build, format:check; manual: proxy forwards path, query and bypass header, secret not in the response |
+| 4.7 | Supabase demo project and private Vercel projects | Done, 22 Oct 2026 | `feat/deploy-demo` (PRs #7, #8), `chore/frontend-regions` (PR #9) | `db:test` 22/22 on the demo database incl. T-SY-05; lint, typecheck, build, format:check; manual, deployed: all three apps ask for Vercel login when signed out; API health 200 when signed in; health 200 through both frontends' proxies (bypass header accepted); functions in `arn1` on Node.js 22.x; neither `x-middleware-rewrite` nor `x-vercel-protection-bypass` in the response |
 
-### 4.7 status (21 Oct 2026)
+Phase 4 done (22 Oct 2026): `main` deploys automatically to the three private Vercel projects.
 
-Done:
+### Demo deployment
 
-1. Decisions D-151 (protected API, bypass header), D-152 (migrations by hand until phase 5), D-153 (Stockholm `eu-north-1`, Vercel `arn1`) recorded.
-2. Supabase project `beauty-store-demo`: Data API off, migrations applied, `db:test` 22/22, reset to empty.
-3. Code on `feat/deploy-demo`: `apps/api/vercel.json` (`arn1`); `src/proxy.ts` in both frontends replaces `rewrites()`; `API_PROTECTION_BYPASS` in `.env.example`; API build runs `prisma generate`; `DIRECT_URL` passed through to the Turborepo build task.
+| Project | Domain | Root Directory |
+| --- | --- | --- |
+| `beauty-store-api` | `beauty-store-demo-api.vercel.app` | `apps/api` |
+| `beauty-store-demo-storefront` | `beauty-store-demo-storefront.vercel.app` | `apps/storefront` |
+| `beauty-store-demo-dashboard` | `beauty-store-demo-dashboard.vercel.app` | `apps/dashboard` |
 
-Next:
-
-1. Push `feat/deploy-demo`, open the PR, CI green, merge to `main` (Vercel builds production from `main`).
-2. Vercel API project (root `apps/api`): `DATABASE_URL` (transaction pooler), `DIRECT_URL` (session pooler); All Deployments protection; create the bypass secret; "Only build production"; confirm region `arn1`.
-3. Vercel storefront and dashboard projects: `API_INTERNAL_URL` (API production domain), `API_PROTECTION_BYPASS`, storefront `NEXT_PUBLIC_SITE_URL`; All Deployments protection.
-4. Deployed checks: each URL asks for Vercel login when signed out; health 200 through both frontends; the API without the bypass header is refused; `x-middleware-rewrite` stripped or not (see notes).
-5. Update the README (deployment), `CLAUDE.md` current status and this file in `docs/progress-4.7`; mark 4.7 done.
+All three: Node.js 22.x, region `arn1` (D-153, D-154), Ignored Build Step "Only build production", Deployment Protection "All Deployments" (D-151), environment variables scoped to Production only. Supabase project `beauty-store-demo` (Stockholm, Data API off), migrations applied by hand (D-152).
 
 ## Known gaps
 
 - `npm audit`: 5 high, all one issue in `braces`, via `eslint-config-next` 16.4.0 → `@next/eslint-plugin-next` → `fast-glob` → `micromatch`. Lint tooling only, not shipped to users. `npm audit fix --force` would downgrade `eslint-config-next` to 14, so it is not used. Since 4.6 (D-150), CI blocks only on production dependencies (0 issues); the full audit still reports this one on every run.
+- Build warning on Vercel: `npm warn deprecated eslint@9.39.5` (ESLint 9 is out of support). Lint tooling only, not deployed. Upgrade to ESLint 10 once `eslint-config-next` supports it, together with the shared ESLint config (D-144, phase 5).
 
 ## Notes
 
@@ -75,6 +72,13 @@ Next:
 - 4.7: the session pooler (port 5432) allows 15 clients on the Nano compute, so the 20-client concurrency tests fail there with `EMAXCONNSESSION`. Run `db:test` against Supabase with `DB_URL` set to the transaction pooler (port 6543), which queues extra clients instead. Phase 5: keep the app's `pg` pool small per function.
 - 4.7: Free-plan direct connections are IPv6-only; Vercel and GitHub Actions use IPv4, so `DIRECT_URL` is the session pooler string and `DATABASE_URL` the transaction pooler.
 - 4.7: D-151: `/api/*` forwarding moved from `rewrites()` to `src/proxy.ts` in both frontends, adding `x-vercel-protection-bypass` from `API_PROTECTION_BYPASS` (read at runtime). Verified with `next start` against a fake API: path, query and secret forwarded; the secret is not in the response.
-- 4.7: a proxy rewrite to another host makes Next add `x-middleware-rewrite: <API_INTERNAL_URL>/...` to the response, which reveals the API address. Check on Vercel whether the platform strips it.
+- 4.7: a proxy rewrite to another host makes Next add `x-middleware-rewrite: <API_INTERNAL_URL>/...` to the response, which reveals the API address. Vercel strips it (checked 22 Oct 2026, see below).
 - 4.7: Next 16 refuses a second `next dev` in the same app folder ("Another next dev server is already running"); use `next build` + `next start -p <port>` for a second instance.
 - 4.7: Prisma 7's `env("DIRECT_URL")` makes even `prisma generate` fail without the variable, so the API build (`prisma generate && next build`) needs `DIRECT_URL` (Turborepo `passThroughEnv`, and set in Vercel).
+- 4.7: renaming a Vercel project doesn't rename its domain. The API was imported as `beauty-store` and got `beauty-store-omega.vercel.app`; `beauty-store-demo-api.vercel.app` was added and the old domain removed.
+- 4.7: `beauty-store-api.vercel.app` belongs to another Vercel team (it answered with Vercel's 404). The frontends send the bypass secret to `API_INTERNAL_URL`, so only ever set it to a domain you have opened yourself and seen your own login page or health JSON on.
+- 4.7: Vercel defaults to the newest Node.js (24.x); all three projects are set to 22.x to match CI (`ci.yml`). Change both together.
+- 4.7: a project only gets a deployment after the first build; if the import screen is left before deploying, use Deployments → ⋯ → Create Deployment → `main`. Environment variables reach only builds started after they are saved.
+- 4.7: `NEXT_PUBLIC_SITE_URL` is copied into the browser code at build time; if the storefront domain changes, update it and redeploy.
+- 4.7: on Vercel the response has no `x-middleware-rewrite` header, so the API address stays private (D-072); the bypass header is not echoed either.
+- 4.7: `apps/api/app/route.ts` is the `--api` template's "Hello world" route at `/`; remove it in phase 5.

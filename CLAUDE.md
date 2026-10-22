@@ -8,7 +8,7 @@ All planning is approved. Source of truth is the `docs/` folder.
 
 | File | Contents |
 | --- | --- |
-| `docs/prd.md` | Requirements (ST-, AD-, BE-, NFR-), user flows, decision log D-001 to D-147 |
+| `docs/prd.md` | Requirements (ST-, AD-, BE-, NFR-), user flows, decision log D-001 to D-154 |
 | `docs/architecture.md` | Components, monorepo layout, module layers, environments, free-tier limits |
 | `docs/database-design.md` | 41 tables, constraints, transactions and locking (section 5) |
 | `docs/api-contracts.md` | Every endpoint, permissions, error codes, idempotency, rate limits |
@@ -110,8 +110,10 @@ task 2 (logical classes, next-intl in the dashboard) **done** (14 Oct 2026);
 task 3 (Prisma migrations and database tests on local Supabase) **done** (19 Oct 2026);
 task 4 (Mailpit SMTP, `.env.example` files, README) **done** (19 Oct 2026);
 task 5 (`/api/*` rewrites, `GET /api/v1/health`, D-149) **done** (20 Oct 2026).
-task 6 (GitHub Actions CI, D-150) **done** (20 Oct 2026).
-Next: task 7 (Supabase demo project, Vercel projects). See `docs/progress.md`; setup steps are in `README.md`.
+task 6 (GitHub Actions CI, D-150) **done** (20 Oct 2026);
+task 7 (Supabase demo project, private Vercel projects in `arn1`, D-151 to D-154) **done** (22 Oct 2026).
+Phase 4 is done. Next: phase 5 (Backend foundation), task 1 (route-handler wrapper).
+See `docs/progress.md`; setup and deployment steps are in `README.md`.
 
 Task 1 was verified in a sandbox before handover: create-next-app 16.4.0 with
 `--ts --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm --skip-install --disable-git`

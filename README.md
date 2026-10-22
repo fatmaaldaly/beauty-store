@@ -147,6 +147,40 @@ This deletes all data and reapplies the migrations. Only ever run it against the
 | `db:test` fails with `duplicate key value`                                                              | Test data from a previous run. Reset as shown in [Database test data](#database-test-data).                                                                                                                                                            |
 | Image pulls fail with `429 Too Many Requests` or `TLS handshake timeout`                                | Network or registry hiccup during the first start. Run `npx supabase start` again; it continues where it stopped.                                                                                                                                      |
 
+## Deployment (demo)
+
+The demo runs on three private Vercel Hobby projects built from this repository, with the
+database on the Supabase project `beauty-store-demo` (Stockholm). Vercel builds and deploys
+production whenever `main` changes; other branches are not built (CI checks them).
+
+| Vercel project                 | Root Directory    | Production environment variables                                                         |
+| ------------------------------ | ----------------- | ---------------------------------------------------------------------------------------- |
+| `beauty-store-api`             | `apps/api`        | `DATABASE_URL` (transaction pooler, port 6543), `DIRECT_URL` (session pooler, port 5432) |
+| `beauty-store-demo-storefront` | `apps/storefront` | `API_INTERNAL_URL`, `API_PROTECTION_BYPASS`, `NEXT_PUBLIC_SITE_URL`                      |
+| `beauty-store-demo-dashboard`  | `apps/dashboard`  | `API_INTERNAL_URL`, `API_PROTECTION_BYPASS`                                              |
+
+Settings shared by all three:
+
+- **Node.js Version** 22.x, the same as CI.
+- **Ignored Build Step**: "Only build production".
+- **Deployment Protection**: Vercel Authentication on "All Deployments", so only signed-in
+  team members can open the sites (D-151).
+- **Region** `arn1` (Stockholm), next to the database, set by each app's `vercel.json` (D-153, D-154).
+- Environment variables are scoped to **Production** only; mark secrets as Sensitive.
+
+How the pieces connect:
+
+- The frontends forward `/api/*` to `API_INTERNAL_URL` (the API's production domain, `https://`,
+  no trailing slash) in `src/proxy.ts`, adding the API project's **Protection Bypass for
+  Automation** secret from `API_PROTECTION_BYPASS` as the `x-vercel-protection-bypass` header.
+  Check the domain yourself before using it: the secret is sent to whatever address is there.
+- `NEXT_PUBLIC_SITE_URL` and `API_INTERNAL_URL` are read at build time; after changing them, redeploy.
+- Migrations are applied to the demo database by hand until phase 5 (D-152): from `apps/api`,
+  run `npx prisma migrate deploy` with `DIRECT_URL` set to the demo's session pooler string.
+
+Check a deployment: in a private window, each site shows the Vercel login page; signed in,
+`https://<site>/api/v1/health` answers `{"status":"ok","database":"ok"}` on all three.
+
 ## Working on the project
 
 - One short-lived branch per task (`feat/...`, `fix/...`), Conventional Commits, `main` always deployable.
